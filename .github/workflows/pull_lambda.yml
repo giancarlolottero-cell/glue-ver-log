@@ -1,0 +1,12 @@
+# Esta acción va a actualizar el código de la lambda como si hiciera un pull desde AWS
+
+            - name: AWS Lambda Sync
+  # You may pin to the exact commit or the version.
+  # uses: quanglddev/aws-lambda-sync-action@567f94cf62b22680f9f7b88be02d84a8c4021ea8
+  uses: quanglddev/aws-lambda-sync-action@ramapithecus16.0
+  with:
+    # The name for the Lambda layer the dependencies should be pushed to (every push is a new version).
+    lambda_layer_name: 
+    # The Lambda function name. Check the AWS docs/readme for examples.
+    lambda_function_name: lambdas/test.py
+          
