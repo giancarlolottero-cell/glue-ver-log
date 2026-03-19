@@ -23,8 +23,10 @@ jobs:
           aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws_region: sa-east-1
           function_name: test-git-gian-2
-          source: lambda_function.py # Ahora sí lo encuentra en la raíz
+          source: lambda_function.py
+          # --- ESTO ES LO QUE FALTA PARA LA CREACIÓN ---
+          handler: lambda_function.lambda_handler
+          runtime: python3.12 
+          role: arn:aws:iam::031418713056:role/lambda-execution-role-demo-ingenieria-datos
+          # ---------------------------------------------
           debug: true
-          
-          publish: true  # Crea una nueva versión numerada, esto suele "saltar" bloqueos
-          max_attempts: 30 # Que intente 30 veces rápido en lugar de esperar 12 min
