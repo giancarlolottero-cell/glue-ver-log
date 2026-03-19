@@ -4,16 +4,17 @@ on:
   push:
     branches:
       - main
-  workflow_dispatch:  # <--- ESTO ES LO QUE AGREGAS PARA EL BOTÓN MANUAL
+  workflow_dispatch:
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Descargar código
+        uses: actions/checkout@v4
 
-      # Este paso "saca" el archivo de la carpeta y lo pone en la raíz del runner
       - name: Preparar archivo
+        # Asegúrate de que la ruta coincida con tu carpeta real
         run: cp lambdas/test-git-gian-2/lambda_function.py ./lambda_function.py
 
       - name: AWS Lambda Deploy
@@ -23,5 +24,6 @@ jobs:
           aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws_region: sa-east-1
           function_name: test-git-gian-2
-          source: lambda_function.py  # <-- Esto es lo único que realmente cambia
+          source: lambda_function.py
+          # QUITAMOS handler, runtime, role y publish para evitar bloqueos
           debug: true
