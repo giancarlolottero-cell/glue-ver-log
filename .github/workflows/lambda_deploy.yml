@@ -1,4 +1,18 @@
-- name: AWS Lambda Deploy
+name: Deploy Lambda
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:  # <--- ESTO ES LO QUE AGREGAS PARA EL BOTÓN MANUAL
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: AWS Lambda Deploy
         uses: appleboy/lambda-action@v0.2.0
         with:
           aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -6,6 +20,5 @@
           aws_region: sa-east-1
           function_name: test-git-gian
           source: lambdas/test-git-gian.py
-          # Esto ayuda a que no se pierda buscando el archivo
           project_path: ./ 
           debug: true
