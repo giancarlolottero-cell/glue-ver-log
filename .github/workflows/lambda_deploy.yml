@@ -19,6 +19,6 @@ jobs:
           aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws_region: sa-east-1
           function_name: test-git-gian
-          source: test-git-gian.py
-          project_path: lambdas/
+          source: lambda_function.py
+          project_path: lambdas/test-git-gian/
           debug: true
