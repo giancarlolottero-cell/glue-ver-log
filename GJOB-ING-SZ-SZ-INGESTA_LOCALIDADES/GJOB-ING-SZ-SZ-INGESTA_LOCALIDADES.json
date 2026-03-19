@@ -1,0 +1,41 @@
+{
+  "name" : "GJOB-ING-SZ-SZ-INGESTA_LOCALIDADES",
+  "jobMode" : "SCRIPT",
+  "description" : "",
+  "role" : "arn:aws:iam::031418713056:role/glue-execution-role-demo-ingenieria-datos",
+  "executionProperty" : {
+    "maxConcurrentRuns" : 1
+  },
+  "command" : {
+    "name" : "glueetl",
+    "scriptLocation" : "s3://demo-cloud-glue-scripts/scripts/GJOB-ING-SZ-SZ-INGESTA_LOCALIDADES.py",
+    "pythonVersion" : "3"
+  },
+  "defaultArguments" : {
+    "--enable-metrics" : "true",
+    "--enable-spark-ui" : "true",
+    "--spark-event-logs-path" : "s3://demo-cloud-glue-scripts/temporary/",
+    "--enable-job-insights" : "true",
+    "--enable-observability-metrics" : "true",
+    "--conf" : "spark.eventLog.rolling.enabled=true",
+    "--enable-glue-datacatalog" : "true",
+    "--enable-continuous-cloudwatch-log" : "true",
+    "--job-bookmark-option" : "job-bookmark-disable",
+    "--job-language" : "python",
+    "--TempDir" : "s3://aws-glue-assets-031418713056-sa-east-1/temporary/"
+  },
+  "maxRetries" : 1,
+  "allocatedCapacity" : 10,
+  "timeout" : 2880,
+  "maxCapacity" : 10.0,
+  "glueVersion" : "4.0",
+  "numberOfWorkers" : 10,
+  "workerType" : "G.1X",
+  "executionClass" : "STANDARD",
+  "sourceControlDetails" : {
+    "provider" : "GITHUB",
+    "repository" : "glue-ver-log",
+    "branch" : "develop",
+    "folder" : "GJOB-ING-SZ-SZ-INGESTA_LOCALIDADES"
+  }
+}
