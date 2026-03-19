@@ -25,3 +25,6 @@ jobs:
           function_name: test-git-gian
           source: lambda_function.py # Ahora sí lo encuentra en la raíz
           debug: true
+          
+          publish: true  # Crea una nueva versión numerada, esto suele "saltar" bloqueos
+          max_attempts: 30 # Que intente 30 veces rápido en lugar de esperar 12 min
