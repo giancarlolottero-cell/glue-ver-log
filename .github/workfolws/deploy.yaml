@@ -8,15 +8,14 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      # 1. Este es el paso de "Checkout" que limpia las rutas
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          path: '.' # Esto obliga a usar la raíz sin subcarpetas extras
 
-      # 2. Instalamos SAM
       - name: Setup AWS SAM
         uses: aws-actions/setup-sam@v2
 
-      # 3. Credenciales (Asegúrate que los nombres de los secrets coincidan con GitHub)
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -24,11 +23,10 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: sa-east-1
 
-      # 4. SAM Build (Le decimos explícitamente que el archivo está en la raíz)
       - name: SAM Build
-        run: sam build --template template.yaml
+        # Usamos -t para apuntar directo al archivo en el lugar donde estemos
+        run: sam build -t template.yaml
 
-      # 5. SAM Deploy (Subimos a AWS)
       - name: SAM Deploy
         run: |
           sam deploy --no-confirm-changeset \
