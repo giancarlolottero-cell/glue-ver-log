@@ -1,42 +1,56 @@
 import json
+import os
+from requests.utils import requote_uri
+import pandas as pd
 
-# import requests
+
+def _build_summary(event):
+    """Build a small request summary using pandas."""
+    method = event.get("httpMethod", "UNKNOWN")
+    path = requote_uri(event.get("path", "/"))
+    query_params = event.get("queryStringParameters") or {}
+    stage = os.environ.get("STAGE", "dev")
+
+    df = pd.DataFrame(
+        [
+            {
+                "method": method,
+                "path": path,
+                "query_param_count": len(query_params),
+                "stage": stage,
+            }
+        ]
+    )
+
+    return df.to_dict(orient="records")[0]
 
 
 def lambda_handler(event, context):
-    """Sample pure Lambda function
+    """Handle API Gateway Lambda proxy requests."""
+    try:
+        summary = _build_summary(event)
 
-    Parameters
-    ----------
-    event: dict, required
-        API Gateway Lambda Proxy Input Format
-
-        Event doc: https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-lambda-proxy-integrations.html#api-gateway-simple-proxy-for-lambda-input-format
-
-    context: object, required
-        Lambda Context runtime methods and attributes
-
-        Context doc: https://docs.aws.amazon.com/lambda/latest/dg/python-context-object.html
-
-    Returns
-    ------
-    API Gateway Lambda Proxy Output Format: dict
-
-        Return doc: https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-lambda-proxy-integrations.html
-    """
-
-    # try:
-    #     ip = requests.get("http://checkip.amazonaws.com/")
-    # except requests.RequestException as e:
-    #     # Send some context about this error to Lambda Logs
-    #     print(e)
-
-    #     raise e
-
-    return {
-        "statusCode": 200,
-        "body": json.dumps({
-            "message": "hello world, ahora con pandas",
-            # "location": ip.text.replace("\n", "")
-        }),
-    }
+        return {
+            "statusCode": 200,
+            "headers": {
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*",
+            },
+            "body": json.dumps(
+                {
+                    "message": "hello world",
+                    "summary": summary,
+                }
+            ),
+        }
+    except Exception as error:
+        print(f"Error in lambda_handler: {error}")
+        return {
+            "statusCode": 500,
+            "headers": {"Content-Type": "application/json"},
+            "body": json.dumps(
+                {
+                    "message": "internal server error",
+                }
+            ),
+        }
